@@ -1,10 +1,8 @@
 package com.auth_spring_react.server.model;
 
+import com.auth_spring_react.server.dto.UserRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,6 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Entity
 @Table(	name = "users",
         uniqueConstraints = {
@@ -73,5 +72,21 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public static User toUserFromUserRequest(UserRequest userRequest) {
+
+        Set<Role> authorities = new HashSet<>();
+
+        for (String roleString : userRequest.getAuthority()) {
+            authorities.add(new Role(roleString));
+        }
+
+        return User.builder()
+                .username(userRequest.getUsername())
+                .email(userRequest.getEmail())
+                .password(userRequest.getPassword())
+                .authorities(authorities)
+                .build();
     }
 }
