@@ -28,6 +28,8 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.postgresql:postgresql:42.5.1'
 	implementation 'org.springframework.boot:spring-boot-starter-validation:3.0.1'
+	implementation 'org.springframework.security:spring-security-oauth2-resource-server:6.0.1'
+	implementation 'org.springframework.security:spring-security-oauth2-jose:6.0.1'
 }
 
 tasks.named('test') {
