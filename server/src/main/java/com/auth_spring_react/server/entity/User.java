@@ -1,12 +1,9 @@
-package com.auth_spring_react.server.model;
+package com.auth_spring_react.server.entity;
 
-import com.auth_spring_react.server.dto.UserRequest;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -27,29 +24,39 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "username")
     private String username;
 
+    @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
     private String password;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(	name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @Builder.Default
     private Set<Role> authorities = new HashSet<>();
 
+    @Column(name = "enabled")
+    @Builder.Default
     private boolean enabled = true;
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return enabled;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return enabled;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return enabled;
     }
 
     @Override
@@ -72,21 +79,5 @@ public class User implements UserDetails {
     @Override
     public int hashCode() {
         return getClass().hashCode();
-    }
-
-    public static User toUserFromUserRequest(UserRequest userRequest) {
-
-        Set<Role> authorities = new HashSet<>();
-
-        for (String roleString : userRequest.getAuthority()) {
-            authorities.add(new Role(roleString));
-        }
-
-        return User.builder()
-                .username(userRequest.getUsername())
-                .email(userRequest.getEmail())
-                .password(userRequest.getPassword())
-                .authorities(authorities)
-                .build();
     }
 }

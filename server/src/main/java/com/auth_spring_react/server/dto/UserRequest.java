@@ -2,11 +2,13 @@ package com.auth_spring_react.server.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import java.util.HashSet;
 import java.util.Set;
 
 @Builder
 @Getter
+@NoArgsConstructor
 public class UserRequest {
     private String username;
     private String email;
@@ -20,7 +22,7 @@ public class UserRequest {
         this.password = password;
 
         if (authority == null) {
-            authority = new HashSet<>();
+            this.authority = new HashSet<>();
         }
         else {
             this.authority = authority;

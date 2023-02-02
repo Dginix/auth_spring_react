@@ -1,82 +1,57 @@
 package com.auth_spring_react.server.controller;
 
+import com.auth_spring_react.server.dto.LoginRequest;
 import com.auth_spring_react.server.dto.UserRequest;
 import com.auth_spring_react.server.dto.UserResponse;
-import com.auth_spring_react.server.model.User;
+import com.auth_spring_react.server.entity.User;
 import com.auth_spring_react.server.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.time.Instant;
-
-import static java.lang.String.format;
-import static java.util.stream.Collectors.joining;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import com.auth_spring_react.server.security.JwtUtils;
 
 @RestController
 @RequestMapping(path = "api/auth")
+@Slf4j
+@RequiredArgsConstructor
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthController {
     private final AuthenticationManager authenticationManager;
-    private final JwtEncoder jwtEncoder;
+    private final JwtUtils jwtUtils;
     private final UserService userService;
 
-    @Autowired
-    public AuthController(AuthenticationManager authenticationManager, JwtEncoder jwtEncoder, UserService userService) {
-        this.authenticationManager = authenticationManager;
-        this.jwtEncoder = jwtEncoder;
-        this.userService = userService;
-    }
-
     @PostMapping("login")
-    public ResponseEntity<UserResponse> login(@RequestBody @Valid UserRequest request) {
-        try {
-            var authentication =
-                    authenticationManager.authenticate(
-                            new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+    public ResponseEntity<?> loginUser(@Valid @RequestBody LoginRequest loginRequest) {
 
-            var user = (User) authentication.getPrincipal();
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-            var now = Instant.now();
-            var expiry = 36000L;
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            var scope =
-                    authentication.getAuthorities().stream()
-                            .map(GrantedAuthority::getAuthority)
-                            .collect(joining(" "));
+        User user = (User) authentication.getPrincipal();
 
-            var claims =
-                    JwtClaimsSet.builder()
-                            .issuer("example.io")
-                            .issuedAt(now)
-                            .expiresAt(now.plusSeconds(expiry))
-                            .subject(format("%s,%s", user.getId(), user.getUsername()))
-                            .claim("roles", scope)
-                            .build();
+        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(user);
 
-            var token = this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.AUTHORIZATION, token)
-                    .body(UserResponse.toUserResponseFromUser(user));
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+                .body(new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getAuthorities()));
     }
 
     @PostMapping("register")
-    public UserResponse register(@RequestBody @Valid UserRequest request) {
+    public UserResponse registerUser(@RequestBody @Valid UserRequest request) {
+        log.debug("Register: " + request.toString());
         return userService.createUser(request);
     }
 }
