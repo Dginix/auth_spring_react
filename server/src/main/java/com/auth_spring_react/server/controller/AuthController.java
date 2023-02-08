@@ -48,8 +48,8 @@ public class AuthController {
                 .body(new UserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getAuthorities()));
     }
 
-    @PostMapping("register")
-    public UserResponse registerUser(@RequestBody @Valid UserRequest request) {
+    @PostMapping("signup")
+    public UserResponse signupUser(@RequestBody @Valid UserRequest request) {
         log.debug("Register: " + request.toString());
         return userService.createUser(request);
     }
