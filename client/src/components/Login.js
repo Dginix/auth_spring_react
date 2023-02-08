@@ -1,20 +1,27 @@
-import { Grid, Paper, Avatar, Typography, TextField, Button, Box, Link } from "@mui/material"
+import React, { useState } from "react";
+import { Grid, Paper, Avatar, Typography, TextField, Button, Box, Link, Alert, AlertTitle, Backdrop, CircularProgress } from "@mui/material"
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined"
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import AuthService from "../services/AuthService";
+import axios from "axios";
 
 const Login = () => {
+
+  const [loading, setLoading] = useState(false);
+  const [alertType, setAlertType] = useState("");
+  const [loadingMessage, setloadingMessage] = useState("");
 
   const validationSchema = Yup.object().shape({
     username: Yup.string()
       .required('Username is required')
-      .min(6, 'Username must be at least 6 characters')
+      .min(3, 'Username must be at least 3 characters')
       .max(20, 'Username must not exceed 20 characters'),
     password: Yup.string()
       .required('Password is required')
-      .min(6, 'Password must be at least 6 characters')
-      .max(40, 'Password must not exceed 40 characters'),
+      .min(4, 'Password must be at least 4 characters')
+      .max(20, 'Password must not exceed 20 characters'),
   });
 
   const {
@@ -25,14 +32,39 @@ const Login = () => {
     resolver: yupResolver(validationSchema)
   });
 
-  const onSubmit = data => {
-    console.log(JSON.stringify(data, null, 2));
-  };
 
+  const onSubmit = data => {
+
+    setloadingMessage("Loading...")
+    setAlertType("info")
+    setLoading(true)
+
+    AuthService.login(data.username, data.password)
+    .then(() => {
+
+      console.log(AuthService.getCurrentUser)
+      setloadingMessage("Success")
+      setAlertType("success")
+      setLoading(false)
+      }, (error) => {
+
+        setloadingMessage(error.message)
+        setAlertType("error")
+        setLoading(false)
+        console.log(error.message)
+      }
+    )
+  }
 
   return (
     <div className="Login">
       <Paper elevation={3}>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
         <Box
           sx={{
             marginTop: 8,
@@ -47,6 +79,11 @@ const Login = () => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
+          {loadingMessage && (
+            <Alert severity={alertType} sx={{ mt: 2}} >
+              <AlertTitle> {loadingMessage} </AlertTitle>
+            </Alert>
+          )}
           <Box
             component="form"
             noValidate

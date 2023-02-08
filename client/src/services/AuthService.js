@@ -14,14 +14,13 @@ const register = (username, email, password, authority) => {
 const login = (username, password) => {
   return axios
     .post(API_URL + "login", {
-      username,
-      password,
+      username: username,
+      password: password,
     })
     .then((response) => {
       if (response.data.username) {
         localStorage.setItem("user", JSON.stringify(response.data));
       }
-
       return response.data;
     });
 };
