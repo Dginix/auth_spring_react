@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import AuthService from "../services/AuthService";
-import axios from "axios";
 
 const Login = () => {
 
@@ -42,7 +41,7 @@ const Login = () => {
     AuthService.login(data.username, data.password)
     .then(() => {
 
-      console.log(AuthService.getCurrentUser)
+      console.log(AuthService.getCurrentUser())
       setloadingMessage("Success")
       setAlertType("success")
       setLoading(false)
