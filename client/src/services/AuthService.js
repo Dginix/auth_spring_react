@@ -4,10 +4,16 @@ const API_URL = "http://localhost:3000/api/auth/";
 
 const register = (username, email, password, authority) => {
   return axios.post(API_URL + "signup", {
-    username,
-    email,
-    password,
-    authority
+    username: username,
+    email: email,
+    password: password,
+    authority: authority
+  })
+  .then((response) => {
+    if (response.data.username) {
+      localStorage.setItem("user", JSON.stringify(response.data));
+    }
+    return response.data;
   });
 };
 

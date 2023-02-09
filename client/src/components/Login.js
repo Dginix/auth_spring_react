@@ -6,7 +6,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import AuthService from "../services/AuthService";
 import { Container } from '@mui/system';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 
 const Login = () => {
 
@@ -75,7 +75,7 @@ const Login = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Login
           </Typography>
           {loadingMessage && (
             <Alert severity={alertType} sx={{ mt: 2 }} >
@@ -127,8 +127,12 @@ const Login = () => {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
+                <Link
+                  component={RouterLink}
+                  to="/signup"
+                  variant="body2"
+                >
+                  Don't have an account yet? Sign up
                 </Link>
               </Grid>
             </Grid>

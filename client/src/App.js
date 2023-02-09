@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import AdminContent from './components/AdminContent';
 import UserContent from './components/UserContent';
 import Layout from './components/Layout';
+import Signup from './components/Signup';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -18,7 +19,6 @@ function App() {
   useEffect(() => {
     if (!AuthService.getCurrentUser()) {
       setIsLoggedIn(false)
-      navigate("/login");
     }
     else {
       setIsLoggedIn(true)
@@ -41,11 +41,15 @@ function App() {
                 <Route exact path="/user" element={<UserContent />} />
                 <Route exact path={"/home"} element={<Home />} />
                 <Route exact path={"/"} element={<Home />} />
+                <Route path={"*"} element={<Navigate replace to={"/"} />} />
               </Route>
               :
-              <Route exact path="/login" element={<Login />} />
+              <Route>
+                <Route exact path="/login" element={<Login />} />
+                <Route exact path="/signup" element={<Signup />} />
+                <Route path={"*"} element={<Navigate replace to={"/login"} />} />
+              </Route>
           }
-          <Route path={"*"} element={<Navigate replace to={"/"} />} />
         </Routes>
       </ThemeProvider>
     </div>

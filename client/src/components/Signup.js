@@ -19,13 +19,13 @@ import {
     FormLabel,
     FormHelperText
 } from "@mui/material";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import AuthService from "../services/AuthService";
 import { Container } from "@mui/system";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
+import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
 
 const Signup = () => {
     const [loading, setLoading] = useState(false);
@@ -72,9 +72,6 @@ const Signup = () => {
         console.log(data)
         AuthService.register(data.username, data.email, data.password, data.role).then(
             () => {
-                setloadingMessage("Success");
-                setAlertType("success");
-                setLoading(false);
                 navigate("/home");
                 window.location.reload();
             },
@@ -108,7 +105,7 @@ const Signup = () => {
                     }}
                 >
                     <Avatar sx={{ mt: 3, bgcolor: "purple" }}>
-                        <LockOutlinedIcon />
+                        <PersonAddOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Sign up
