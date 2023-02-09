@@ -7,15 +7,14 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import AuthService from "./services/AuthService";
 import { useState, useEffect } from "react";
-
-const theme = createTheme();
+import AdminContent from './components/AdminContent';
+import UserContent from './components/UserContent';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-
     if (!AuthService.getCurrentUser()) {
       setIsLoggedIn(false)
       navigate("/login");
@@ -26,6 +25,8 @@ function App() {
 
   }, [navigate]);
 
+  const theme = createTheme();
+
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
@@ -35,6 +36,8 @@ function App() {
             isLoggedIn?
               <>
                 <Route exact path="/profile" element={<Profile />} />
+                <Route exact path="/admin" element={<AdminContent />} />
+                <Route exact path="/user" element={<UserContent />} />
                 <Route exact path={"/home"} element={<Home />} />
                 <Route exact path={"/"} element={<Home />} />
               </>

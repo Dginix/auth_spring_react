@@ -1,7 +1,7 @@
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { MenuItem, Menu, IconButton, Typography, Toolbar, Box, AppBar, ListItemText, ListItemIcon } from "@mui/material";
+import { MenuItem, Menu, IconButton, Typography, Toolbar, Box, AppBar, ListItemText, ListItemIcon, Button, Stack, Link } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AuthService from "../services/AuthService";
@@ -41,7 +41,19 @@ const MenuAppBar = () => {
                     >
                         Auth-spring-react
                     </Typography>
-                    <IconButton
+                    <Button component={RouterLink} to="/home" color="inherit">
+                        Home
+                    </Button>
+                    <Button component={RouterLink} to="/user" color="inherit">
+                        UserContent
+                    </Button>
+                    <Button component={RouterLink} to="/admin" color="inherit">
+                        AdminContent
+                    </Button>
+                    <Button component={RouterLink} to="/profile" color="inherit">
+                        Profile
+                    </Button>
+                      <IconButton
                         size="large"
                         aria-label="account of current user"
                         aria-controls="menu-appbar"
