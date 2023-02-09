@@ -9,6 +9,7 @@ import AuthService from "./services/AuthService";
 import { useState, useEffect } from "react";
 import AdminContent from './components/AdminContent';
 import UserContent from './components/UserContent';
+import Layout from './components/Layout';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -33,14 +34,14 @@ function App() {
         <CssBaseline />
         <Routes>
           {
-            isLoggedIn?
-              <>
+            isLoggedIn ?
+              <Route element={<Layout />}>
                 <Route exact path="/profile" element={<Profile />} />
                 <Route exact path="/admin" element={<AdminContent />} />
                 <Route exact path="/user" element={<UserContent />} />
                 <Route exact path={"/home"} element={<Home />} />
                 <Route exact path={"/"} element={<Home />} />
-              </>
+              </Route>
               :
               <Route exact path="/login" element={<Login />} />
           }

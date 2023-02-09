@@ -1,4 +1,3 @@
-import MenuAppBar from "./MenuAppBar";
 import {
     Box,
     Typography,
@@ -14,7 +13,6 @@ const Profile = () => {
     const currentUser = AuthService.getCurrentUser();
     return (
         <Box>
-            <MenuAppBar />
             <Box
                 sx={{
                     bgcolor: "background.paper",

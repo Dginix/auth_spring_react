@@ -1,4 +1,3 @@
-import MenuAppBar from "./MenuAppBar";
 import {
     Box,
     Typography,
@@ -11,7 +10,6 @@ const Home = () => {
 
     return (
         <Box>
-            <MenuAppBar />
             <Box
                 sx={{
                     bgcolor: "background.paper",
