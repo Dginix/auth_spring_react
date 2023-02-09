@@ -1,16 +1,24 @@
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { MenuItem, Menu, IconButton, Typography, Toolbar, Box, AppBar, ListItemText, ListItemIcon, Button, Tooltip, Container, Avatar } from "@mui/material";
-import { useState } from "react";
+import { MenuItem, Menu, IconButton, Typography, Toolbar, Box, AppBar, ListItemText, ListItemIcon, Button, Tooltip } from "@mui/material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import AuthService from "../services/AuthService";
 import AdbIcon from '@mui/icons-material/Adb';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useState, useEffect } from "react";
 
 const NavBar = () => {
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const [showAdminBoard, setShowAdminBoard] = useState(false);
+
+    useEffect(() => {
+        const currentUser = AuthService.getCurrentUser();
+        if (currentUser.authorities.find(e => e.authority === "ROLE_ADMIN")) {
+            setShowAdminBoard(true)
+        }
+    }, []);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -89,9 +97,11 @@ const NavBar = () => {
                             <Button component={RouterLink} to="/user" color="inherit">
                                 User Content
                             </Button>
-                            <Button component={RouterLink} to="/admin" color="inherit">
-                                Admin Content
-                            </Button>
+                            {showAdminBoard &&
+                                <Button component={RouterLink} to="/admin" color="inherit">
+                                    Admin Content
+                                </Button>
+                            }
                         </Menu>
                     </Box>
                     <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -120,9 +130,11 @@ const NavBar = () => {
                         <Button component={RouterLink} to="/user" color="inherit">
                             User Content
                         </Button>
-                        <Button component={RouterLink} to="/admin" color="inherit">
-                            Admin Content
-                        </Button>
+                        {showAdminBoard &&
+                            <Button component={RouterLink} to="/admin" color="inherit">
+                                Admin Content
+                            </Button>
+                        }
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
