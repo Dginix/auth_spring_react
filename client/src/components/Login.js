@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import AuthService from "../services/AuthService";
+import { Container } from '@mui/system';
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 
@@ -31,22 +33,19 @@ const Login = () => {
     resolver: yupResolver(validationSchema)
   });
 
+  const navigate = useNavigate();
 
   const onSubmit = data => {
-
     setloadingMessage("Loading...")
     setAlertType("info")
     setLoading(true)
 
     AuthService.login(data.username, data.password)
     .then(() => {
-
       console.log(AuthService.getCurrentUser())
-      setloadingMessage("Success")
-      setAlertType("success")
-      setLoading(false)
+      navigate("/home");
+      window.location.reload();  
       }, (error) => {
-
         setloadingMessage(error.message)
         setAlertType("error")
         setLoading(false)
@@ -56,7 +55,7 @@ const Login = () => {
   }
 
   return (
-    <div className="Login">
+    <Container maxWidth="sm" sx={{ mb: 4 }}>
       <Paper elevation={3}>
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -136,7 +135,7 @@ const Login = () => {
           </Box>
         </Box>
       </Paper>
-    </div>
+      </Container>
   );
 };
 

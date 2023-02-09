@@ -1,7 +1,8 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import Login from './components/Login';
+import Home from './components/Home';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Container } from '@mui/system';
+import { Routes, Route } from "react-router-dom";
 
 const theme = createTheme();
 
@@ -10,9 +11,11 @@ function App() {
     <div className="App">
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Container component="main" maxWidth="sm" sx={{ mb: 4 }}>
-          <Login/>
-        </Container>
+        <Routes>
+          <Route exact path={"/"} element={<Home />} />
+          <Route exact path={"/home"} element={<Home />} />
+          <Route exact path="/login" element={<Login />} />
+        </Routes>
       </ThemeProvider>
     </div>
   );
