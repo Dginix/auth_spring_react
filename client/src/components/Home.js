@@ -7,17 +7,17 @@ const Home = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        
+
         if (!AuthService.getCurrentUser()) {
             navigate("/login");
-            window.location.reload();  
+            window.location.reload();
         }
 
-      }, [navigate]);
+    }, [navigate]);
 
-    return(
+    return (
         <div className='Home'>
-            <MenuAppBar/>
+            <MenuAppBar />
             This is Homepage
         </div>
     )

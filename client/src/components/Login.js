@@ -41,17 +41,17 @@ const Login = () => {
     setLoading(true)
 
     AuthService.login(data.username, data.password)
-    .then(() => {
-      console.log(AuthService.getCurrentUser())
-      navigate("/home");
-      window.location.reload();  
+      .then(() => {
+        console.log(AuthService.getCurrentUser())
+        navigate("/home");
+        window.location.reload();
       }, (error) => {
         setloadingMessage(error.message)
         setAlertType("error")
         setLoading(false)
         console.log(error.message)
       }
-    )
+      )
   }
 
   return (
@@ -78,7 +78,7 @@ const Login = () => {
             Sign up
           </Typography>
           {loadingMessage && (
-            <Alert severity={alertType} sx={{ mt: 2}} >
+            <Alert severity={alertType} sx={{ mt: 2 }} >
               <AlertTitle> {loadingMessage} </AlertTitle>
             </Alert>
           )}
@@ -113,7 +113,7 @@ const Login = () => {
                   id="password"
                   {...register('password')}
                   error={errors.password ? true : false}
-                  helperText={errors.password?.message}  
+                  helperText={errors.password?.message}
                 />
               </Grid>
             </Grid>
@@ -135,7 +135,7 @@ const Login = () => {
           </Box>
         </Box>
       </Paper>
-      </Container>
+    </Container>
   );
 };
 
