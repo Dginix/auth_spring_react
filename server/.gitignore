@@ -38,3 +38,4 @@ out/
 
 ### OTHER ###
 src/main/resources/*.env
+src/main/resources/*.key
