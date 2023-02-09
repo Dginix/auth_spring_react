@@ -1,13 +1,10 @@
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
+import { MenuItem, Menu, IconButton, Typography, Toolbar, Box, AppBar, ListItemText, ListItemIcon } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import AuthService from "../services/AuthService";
 
 const MenuAppBar = () => {
     const [anchorEl, setAnchorEl] = useState(null);
@@ -25,6 +22,12 @@ const MenuAppBar = () => {
     const handleProfile = () => {
         handleClose();
         navigate("/profile");
+    };
+
+    const handleLogout = () => {
+        handleClose();
+        AuthService.logout()
+        window.location.reload();
     };
 
     return (
@@ -63,7 +66,22 @@ const MenuAppBar = () => {
                         open={Boolean(anchorEl)}
                         onClose={handleClose}
                     >
-                        <MenuItem onClick={handleProfile}>Profile</MenuItem>
+                        <MenuItem onClick={handleProfile}>
+                            <ListItemIcon>
+                                <ManageAccountsIcon />
+                            </ListItemIcon>
+                            <ListItemText>
+                                Profile
+                            </ListItemText>
+                        </MenuItem>
+                        <MenuItem onClick={handleLogout}>
+                            <ListItemIcon>
+                                <ExitToAppIcon />
+                            </ListItemIcon>
+                            <ListItemText>
+                                Logout
+                            </ListItemText>
+                        </MenuItem>
                     </Menu>
                 </Toolbar>
             </AppBar>
